@@ -1,7 +1,5 @@
 # ARCHE-exif
 
-[![License](https://poser.pugx.org/acdh-oeaw/arche-exif/license)](https://packagist.org/packages/acdh-oeaw/arche-exif)
-
 A dissemination service for the [ARCHE Suite](https://acdh-oeaw.github.io/arche-docs/) providing repository resource EXIF metadata as a JSON.
 
 ## Deployment
