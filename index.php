@@ -2,7 +2,8 @@
 include __DIR__ . '/vendor/autoload.php';
 $id = (int) ($_GET['id'] ?? '');
 $dataDir = getenv('DATADIR') ?: '/data';
-$path = acdhOeaw\arche\core\BinaryPayload::getStorageDir($id, $dataDir, 0, 0) . '/' . $id;
+$maxLevel = getenv('MAXLEVEL') ?: 2;
+$path = acdhOeaw\arche\core\BinaryPayload::getStorageDir($id, $dataDir, 0, $maxLevel) . '/' . $id;
 if (!file_exists($path) || !is_file($path)) {
     http_response_code(404);
     echo "Resource $id not found\n";
