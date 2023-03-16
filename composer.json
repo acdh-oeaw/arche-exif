@@ -1,0 +1,34 @@
+{
+    "name": "acdh-oeaw/arche-exif",
+    "type": "library",
+    "description": "An ARCHE dissemination service providing image EXIF data",
+    "keywords": [],
+    "homepage": "https://github.com/acdh-oeaw/arche-exif",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mateusz Żółtak",
+            "email": "mzoltak@oeaw.ac.at"
+        }
+    ],
+    "require": {
+        "php": ">=8.0 <8.3",
+        "psr/log": "*",
+        "acdh-oeaw/arche-core": "^3.7.8-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+            "acdhOeaw\\": "src/acdhOeaw"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "phpstan/phpstan": "*"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "acdhOeaw\\arche\\lib\\tests\\": "tests"
+        }
+    },
+    "minimum-stability": "RC"
+}
