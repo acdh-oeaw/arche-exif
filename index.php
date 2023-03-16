@@ -1,6 +1,7 @@
 <?php
 include __DIR__ . '/vendor/autoload.php';
-$id = (int) ($_GET['id'] ?? '');
+
+$id = (int) preg_replace('`^.*/`', '', $_GET['id'] ?? '');
 $dataDir = getenv('DATADIR') ?: '/data';
 $maxLevel = getenv('MAXLEVEL') ?: 2;
 $path = acdhOeaw\arche\core\BinaryPayload::getStorageDir($id, $dataDir, 0, $maxLevel) . '/' . $id;
