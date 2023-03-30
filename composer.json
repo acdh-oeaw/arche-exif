@@ -14,7 +14,7 @@
     "require": {
         "php": ">=8.0 <8.3",
         "psr/log": "*",
-        "acdh-oeaw/arche-core": "^3.7.8-RC1"
+        "acdh-oeaw/arche-core": "^3.7.9"
     },
     "autoload": {
         "psr-4": {
