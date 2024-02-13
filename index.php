@@ -1,11 +1,11 @@
 <?php
 include __DIR__ . '/vendor/autoload.php';
 
-$baseUrl = getenv('BASEURL') ?? '';
+$baseUrl = getenv('BASEURL') ?: '';
 $dataDir = getenv('DATADIR') ?: '/data';
 $maxLevel = getenv('MAXLEVEL') ?: 2;
 $maxSize = (getenv('MAXSIZE') ?: 1000) * 1048576;
-$allowedNmsp = getenv('ALLOWEDNMSP') ?? '';
+$allowedNmsp = getenv('ALLOWEDNMSP') ?: '';
 $allowedNmsp = empty($allowedNmsp) ? [] : explode(',', $allowedNmsp);
 
 $id = $_GET['id'] ?? '';
