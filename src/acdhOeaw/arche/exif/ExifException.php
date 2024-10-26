@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 Austrian Centre for Digital Humanities.
+ * Copyright 2024 zozlak.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,13 @@
  * THE SOFTWARE.
  */
 
-use acdhOeaw\arche\lib\dissCache\Service;
-use acdhOeaw\arche\exif\Resource;
+namespace acdhOeaw\arche\exif;
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
-
-include __DIR__ . '/vendor/autoload.php';
-
-$service = new Service(__DIR__ . "/config.yaml");
-$config  = $service->getConfig();
-$clbck   = fn($res, $param) => Resource::cacheHandler($res, $param, $config->exif, $service->getLog());
-$service->setCallback($clbck);
-
-$response = $service->serveRequest($_GET['id'] ?? '', []);
-$response->send();
+/**
+ * Description of IiifException
+ *
+ * @author zozlak
+ */
+class ExifException extends \acdhOeaw\arche\lib\dissCache\ServiceException {
+    //put your code here
+}
