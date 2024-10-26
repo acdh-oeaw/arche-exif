@@ -69,7 +69,7 @@ class ResourceTest extends \PHPUnit\Framework\TestCase {
         $t2        = microtime(true) - $t1;
         $t1        = $t1 - $t0;
 
-        $body            = '{"Directory":"/tmp","FileSize":"56 kB","FileType":"TIFF","FileTypeExtension":"tif","MIMEType":"image/tiff","ExifByteOrder":"Little-endian (Intel, II)","SubfileType":"Full-resolution image","ImageWidth":1700,"ImageHeight":2546,"BitsPerSample":1,"Compression":"T6/Group 4 Fax","PhotometricInterpretation":"WhiteIsZero","FillOrder":"Normal","DocumentName":"G:\\\\Baedeker\\\\Konstantinopel_und_Kleinasien\\\\Baedeker-Konstantinopel_und_Kleinasien_a0002.tif","StripOffsets":416,"Orientation":"Horizontal (normal)","SamplesPerPixel":1,"RowsPerStrip":2546,"StripByteCounts":55173,"XResolution":400,"YResolution":400,"ResolutionUnit":"inches","PageNumber":"0 1","Software":"ImageGear Version:  7.01.002","ModifyDate":"Wed Apr 28 13:41:38 2004\n","Artist":"","ImageSize":"1700x2546","Megapixels":4.3}';
+        $body            = '{"Directory":"/tmp","FileType":"TIFF","FileTypeExtension":"tif","MIMEType":"image/tiff","ExifByteOrder":"Little-endian (Intel, II)","SubfileType":"Full-resolution image","ImageWidth":1700,"ImageHeight":2546,"BitsPerSample":1,"Compression":"T6/Group 4 Fax","PhotometricInterpretation":"WhiteIsZero","FillOrder":"Normal","DocumentName":"G:\\\\Baedeker\\\\Konstantinopel_und_Kleinasien\\\\Baedeker-Konstantinopel_und_Kleinasien_a0002.tif","StripOffsets":416,"Orientation":"Horizontal (normal)","SamplesPerPixel":1,"RowsPerStrip":2546,"StripByteCounts":55173,"XResolution":400,"YResolution":400,"ResolutionUnit":"inches","PageNumber":"0 1","Software":"ImageGear Version:  7.01.002","ModifyDate":"Wed Apr 28 13:41:38 2004\n","Artist":"","ImageSize":"1700x2546","Megapixels":4.3}';
         $expected        = new ResponseCacheItem($body, 200, ['Content-Type' => 'application/json'], false);
         $response1->body = $this->standardizeExifOutput($response1->body);
         $this->assertEquals($expected, $response1);
@@ -133,7 +133,7 @@ class ResourceTest extends \PHPUnit\Framework\TestCase {
 
     private function standardizeExifOutput(string $output): string {
         $output = json_decode($output);
-        unset($output->ExifToolVersion);
+        unset($output->ExifToolVersion, $output->FileSize);
         return json_encode($output, JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE);
     }
 }
