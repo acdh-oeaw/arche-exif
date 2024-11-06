@@ -77,7 +77,6 @@ class Resource {
                 if (!file_exists($path)) {
                     throw new ExifException("Requested resource doesn't have a binary payload\n", 400);
                 }
-                /** @phpstan-ignore property.notFound */
                 $aclRead  = $this->meta->listObjects(new PT($this->schema->aclRead))->getValues();
                 $aclValid = array_intersect($this->config->allowedAclRead, $aclRead);
                 if (count($aclValid) === 0) {
