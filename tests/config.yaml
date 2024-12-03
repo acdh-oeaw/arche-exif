@@ -22,7 +22,7 @@ dissCacheService:
   relativesProperties: []
 exif:
   localAccess: ~
-  maxSizeMb: 100
+  maxSizeMb: 50
   exiftoolCmd: /usr/bin/exiftool
   allowedAclRead:
   - public
