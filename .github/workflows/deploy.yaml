@@ -4,7 +4,7 @@ on:
     inputs:
       deploy:
         type: boolean
-        description: Deploy if not a release
+        description: Push image if not a release
         default: false
   push: ~
   release:
@@ -48,7 +48,4 @@ jobs:
           dockerhubLogin: ${{ secrets.DOCKER_USERNAME }}
           dockehubPassword: ${{ secrets.DOCKER_PASSWORD }}
           imageName: $RANCHER_NAMESPACE
-          rancherProject: $RANCHER_PROJECT
-          rancherNamespace: $RANCHER_NAMESPACE
-          rancherToken: ${{ secrets.RANCHERTOKEN }}
           coverallsToken: ${{ secrets.coverallsToken }}
