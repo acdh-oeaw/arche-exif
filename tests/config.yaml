@@ -33,3 +33,4 @@ exif:
   schema:
     id: https://vocabs.acdh.oeaw.ac.at/schema#hasIdentifier
     binarySize: https://vocabs.acdh.oeaw.ac.at/schema#hasRawBinarySize
+    format: https://vocabs.acdh.oeaw.ac.at/schema#hasFormat

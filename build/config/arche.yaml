@@ -40,3 +40,4 @@ exif:
     id: https://vocabs.acdh.oeaw.ac.at/schema#hasIdentifier
     binarySize: https://vocabs.acdh.oeaw.ac.at/schema#hasRawBinarySize
     aclRead: https://vocabs.acdh.oeaw.ac.at/schema#aclRead
+    format: https://vocabs.acdh.oeaw.ac.at/schema#hasFormat
