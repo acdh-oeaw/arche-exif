@@ -73,10 +73,6 @@ class Resource {
         $resUrl = (string) $this->meta->getNode();
         /*         * @phpstan-ignore property.notFound */
         $mime   = (string) $this->meta->getObject(new PT($this->schema->format));
-        $sizeMb = ((int) $this->meta->getObject(new PT($this->schema->binarySize))) >> 20;
-        if ($sizeMb > $this->config->maxSizeMb) {
-            throw new ExifException("Requested resource is too big ($sizeMb MB > " . $this->config->maxSizeMb . " MB)", 413);
-        }
         $fileCache = new FileCache($this->config->cache->dir, $this->log, (array) $this->config->localAccess);
         $path      = $fileCache->getRefFilePath($resUrl, $mime);
 
