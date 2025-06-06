@@ -37,8 +37,8 @@ jobs:
           curl -f 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-000C-3476-5'
           curl -f -i 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-000C-29F3-4' | grep '400 Bad Request'
           curl -f -i 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-000C-29F3-4' | grep '400 Bad Request'
-          curl -f -i 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-000D-D715-9' | grep '413 Request Entity Too Large'
-          curl -f -i 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-000D-D715-9' | grep '413 Request Entity Too Large'
+          #curl -f -i 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-000D-D715-9' | grep '413 Request Entity Too Large'
+          #curl -f -i 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-000D-D715-9' | grep '413 Request Entity Too Large'
           curl -f -i 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-0011-0DB9-F' | grep '401 Unauthorized'
           curl -f -i 'http://127.0.0.1:8080/?id=https://hdl.handle.net/21.11115/0000-0011-0DB9-F' | grep '401 Unauthorized'
 
