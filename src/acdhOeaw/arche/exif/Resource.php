@@ -71,6 +71,7 @@ class Resource {
 
     public function getOutput(): ResponseCacheItem {
         $resUrl    = (string) $this->meta->getNode();
+        /*         * @phpstan-ignore property.notFound */
         $mime      = (string) $this->meta->getObject(new PT($this->schema->format));
         $fileCache = new FileCache($this->config->cache->dir, $this->log, (array) $this->config->localAccess);
         $path      = $fileCache->getRefFilePath($resUrl, $mime);
@@ -98,35 +99,5 @@ class Resource {
         unset($data->FileName, $data->SourceFile, $data->FileModifyDate, $data->FileAccessDate, $data->FileInodeChangeDate, $data->FilePermissions);
         $data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         return new ResponseCacheItem($data, 200, ['Content-Type' => 'application/json'], false);
-    }
-
-    private function getLocalFilePath(string $resUrl, object $nmspCfg): string {
-        $id     = (int) preg_replace('`^.*/`', '', $resUrl);
-        $level  = $nmspCfg->level;
-        $path   = $nmspCfg->dir;
-        $idPart = $id;
-        while ($level > 0) {
-            $path   .= sprintf('/%02d', $idPart % 100);
-            $idPart = (int) ($idPart / 100);
-            $level--;
-        }
-        $path .= '/' . $id;
-        return $path;
-    }
-
-    private function downloadResource(string $resUrl): string {
-        $remote = fopen($resUrl, 'rb');
-        if ($remote === false) {
-            throw new ExifException("Can't access the requested resource $resUrl\n", 400);
-        }
-        $path  = tempnam(sys_get_temp_dir(), 'exif_cache_');
-        $this->log?->debug("Downloading $resUrl into $path");
-        $local = fopen($path, 'wb');
-        while (!feof($remote)) {
-            fwrite($local, fread($remote, self::DWNLD_CHUNK));
-        }
-        fclose($remote);
-        fclose($local);
-        return $path;
     }
 }
