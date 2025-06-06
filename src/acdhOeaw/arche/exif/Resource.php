@@ -40,7 +40,6 @@ use acdhOeaw\arche\lib\Schema;
 use acdhOeaw\arche\lib\RepoResourceInterface;
 use acdhOeaw\arche\lib\dissCache\ResponseCacheItem;
 use acdhOeaw\arche\lib\dissCache\FileCache;
-use acdhOeaw\arche\lib\dissCache\FileCacheException;
 
 class Resource {
 
@@ -71,19 +70,14 @@ class Resource {
     }
 
     public function getOutput(): ResponseCacheItem {
-        $resUrl    = (string) $this->meta->getNode();
+        $resUrl = (string) $this->meta->getNode();
         /*         * @phpstan-ignore property.notFound */
-        $mime      = (string) $this->meta->getObject(new PT($this->schema->format));
-        $fileCache = new FileCache($this->config->cache->dir, $this->log, (array) $this->config->localAccess);
-        try {
-            $path = $fileCache->getRefFilePath($resUrl, $mime);
-        } catch (FileCacheException $e) {
-            if ($e->getCode() === FileCacheException::NO_BINARY) {
-                throw new ExifException("Requested resource doesn't have a binary payload\n", 400);
-            } else {
-                throw $e;
-            }
+        $mime   = (string) $this->meta->getObject(new PT($this->schema->format));
+        if (empty($mime)) {
+            throw new ExifException("Requested resource doesn't have a binary payload\n", 400);
         }
+        $fileCache = new FileCache($this->config->cache->dir, $this->log, (array) $this->config->localAccess);
+        $path      = $fileCache->getRefFilePath($resUrl, $mime);
 
         if (!file_exists($path) || !is_file($path)) {
             throw new ExifException("Resource $resUrl not found", 404);

@@ -19,6 +19,7 @@ dissCacheService:
   resourceProperties:
   - https://vocabs.acdh.oeaw.ac.at/schema#hasIdentifier
   - https://vocabs.acdh.oeaw.ac.at/schema#hasRawBinarySize
+  - https://vocabs.acdh.oeaw.ac.at/schema#hasFormat
   relativesProperties: []
 exif:
   cache:
