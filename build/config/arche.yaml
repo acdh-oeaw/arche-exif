@@ -24,6 +24,10 @@ dissCacheService:
   - https://vocabs.acdh.oeaw.ac.at/schema#aclRead
   relativesProperties: []
 exif:
+  cache:
+    dir: /var/www/html/cache
+    clearMode: time # 'size' or 'time'
+    maxSizeMb: 2000
   localAccess:
     https://arche.acdh.oeaw.ac.at/api/:
       dir: /arche

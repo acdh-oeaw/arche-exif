@@ -39,6 +39,7 @@ use termTemplates\PredicateTemplate as PT;
 use acdhOeaw\arche\lib\Schema;
 use acdhOeaw\arche\lib\RepoResourceInterface;
 use acdhOeaw\arche\lib\dissCache\ResponseCacheItem;
+use acdhOeaw\arche\lib\dissCache\FileCache;
 
 class Resource {
 
@@ -69,33 +70,10 @@ class Resource {
     }
 
     public function getOutput(): ResponseCacheItem {
-        $resUrl = (string) $this->meta->getNode();
-        $path   = null;
-        foreach ($this->config->localAccess ?? [] as $nmsp => $nmspCfg) {
-            if (str_starts_with($resUrl, $nmsp)) {
-                $path = $this->getLocalFilePath($resUrl, $nmspCfg);
-                if (!file_exists($path)) {
-                    throw new ExifException("Requested resource doesn't have a binary payload\n", 400);
-                }
-                $aclRead  = $this->meta->listObjects(new PT($this->schema->aclRead))->getValues();
-                $aclValid = array_intersect($this->config->allowedAclRead, $aclRead);
-                if (count($aclValid) === 0) {
-                    throw new ExifException("Unauthorized\n", 401);
-                }
-                $this->log?->debug("Accessing local path $path");
-                break;
-            }
-        }
-        if ($path === null) {
-            $size = $this->meta->getObjectValue(new PT($this->schema->binarySize));
-            if ($size === null) {
-                throw new ExifException("Requested resource doesn't have a binary payload\n", 400);
-            }
-            if (($size >> 20) > $this->config->maxSizeMb) {
-                throw new ExifException("Requested resource is too large\n", 413);
-            }
-            $path = $this->downloadResource((string) $this->meta->getNode());
-        }
+        $resUrl    = (string) $this->meta->getNode();
+        $mime      = (string) $this->meta->getObject(new PT($this->schema->format));
+        $fileCache = new FileCache($this->config->cache->dir, $this->log, (array) $this->config->localAccess);
+        $path      = $fileCache->getRefFilePath($resUrl, $mime);
 
         if (!file_exists($path) || !is_file($path)) {
             throw new ExifException("Resource $resUrl not found", 404);
