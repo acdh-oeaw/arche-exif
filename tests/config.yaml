@@ -21,6 +21,10 @@ dissCacheService:
   - https://vocabs.acdh.oeaw.ac.at/schema#hasRawBinarySize
   relativesProperties: []
 exif:
+  cache:
+    dir: cache
+    clearMode: time # 'size' or 'time'
+    maxSizeMb: 2000
   localAccess: ~
   maxSizeMb: 50
   exiftoolCmd: /usr/bin/exiftool
