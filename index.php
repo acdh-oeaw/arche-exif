@@ -34,7 +34,7 @@ include __DIR__ . '/vendor/autoload.php';
 
 $service = new Service(__DIR__ . "/config.yaml");
 $config  = $service->getConfig();
-$clbck   = fn($res, $param) => Resource::cacheHandler($res, $param, $config->exif, $service->getLog());
+$clbck   = fn($res, $param) => Resource::cacheHandler($res, $param, $config, $service->getLog());
 $service->setCallback($clbck);
 
 $response = $service->serveRequest($_GET['id'] ?? '', []);
