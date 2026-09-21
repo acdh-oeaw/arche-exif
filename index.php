@@ -32,10 +32,14 @@ header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
 
 include __DIR__ . '/vendor/autoload.php';
 
+$t0 = microtime(true);
+
 $service = new Service(__DIR__ . "/config.yaml");
+/** @var object{'schema': object, 'exiftoolCmd': string} $config */
 $config  = $service->getConfig();
-$clbck   = fn($res, $param) => Resource::cacheHandler($res, $param, $config, $service->getLog());
+$clbck   = fn($res, $param, $context) => Resource::cacheHandler($res, $param, $config, $context);
 $service->setCallback($clbck);
 
 $response = $service->serveRequest($_GET['id'] ?? '', []);
 $response->send();
+$service->getLog()->info("Response served in " . round(microtime(true) - $t0, 3) . " s");

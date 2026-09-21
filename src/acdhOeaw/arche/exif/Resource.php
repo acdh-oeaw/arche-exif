@@ -27,19 +27,13 @@
 namespace acdhOeaw\arche\exif;
 
 use Psr\Log\LoggerInterface;
-use zozlak\RdfConstants as RDF;
-use rdfInterface\DatasetInterface;
-use rdfInterface\DatasetNodeInterface;
-use rdfInterface\TermInterface;
-use rdfInterface\LiteralInterface;
-use quickRdf\DataFactory as DF;
-use quickRdf\NamedNode;
-use termTemplates\QuadTemplate as QT;
 use termTemplates\PredicateTemplate as PT;
+use rdfInterface\DatasetNodeInterface;
 use acdhOeaw\arche\lib\Schema;
 use acdhOeaw\arche\lib\RepoResourceInterface;
 use acdhOeaw\arche\lib\dissCache\ResponseCacheItem;
-use acdhOeaw\arche\lib\dissCache\FileCache;
+use acdhOeaw\arche\lib\dissCache\CallbackContextInterface;
+use acdhOeaw\arche\lib\dissCache\FileCacheException;
 
 class Resource {
 
@@ -47,26 +41,27 @@ class Resource {
 
     /**
      * @param array<mixed> $param
+     * @param object{'schema': object, 'exiftoolCmd': string} $config
      */
     static public function cacheHandler(RepoResourceInterface $res,
                                         array $param, object $config,
-                                        ?LoggerInterface $log = null): ResponseCacheItem {
+                                        CallbackContextInterface $context): ResponseCacheItem {
 
-        $exifRes = new self($res, $config, $log);
-        return $exifRes->getOutput(...$param);
+        $exifRes = new self($res, $config, $context);
+        return $exifRes->getOutput();
     }
 
     private DatasetNodeInterface $meta;
-    private object $config;
     private Schema $schema;
-    private LoggerInterface | null $log;
 
-    public function __construct(RepoResourceInterface $res, object $config,
-                                ?LoggerInterface $log = null) {
+    /**
+     * 
+     * @param object{'schema': object, 'exiftoolCmd': string} $config
+     */
+    public function __construct(RepoResourceInterface $res, private object $config,
+                                private CallbackContextInterface $context) {
         $this->meta   = $res->getGraph();
-        $this->config = $config;
         $this->schema = new Schema($config->schema);
-        $this->log    = $log;
     }
 
     public function getOutput(): ResponseCacheItem {
@@ -76,8 +71,20 @@ class Resource {
         if (empty($mime)) {
             throw new ExifException("Requested resource doesn't have a binary payload\n", 400);
         }
-        $fileCache = new FileCache($this->config->cache->dir, $this->log, (array) $this->config->localAccess);
-        $path      = $fileCache->getRefFilePath($resUrl, $mime);
+        $fileCache = $this->context->getFileCache();
+        try {
+            $path      = $fileCache->getRefFilePath($resUrl, $mime, $this->context->getNoCache());
+        } catch(FileCacheException $e) {
+            $toThrow = match($e->getCode()) {
+                FileCacheException::TOO_LARGE=>new ExifException("Request entity too large\n", 413),
+                FileCacheException::NO_BINARY=>new ExifException($e->getMessage(), 400),
+                FileCacheException::NO_FILE=>new ExifException($e->getMessage(), 500),
+                FileCacheException::UNAUTHORIZED=>new ExifException("Unauthorized\n", 401),
+                FileCacheException::FORBIDDEN=>new ExifException("Forbidden\n", 403),
+                default=>$e,
+            };
+            throw $toThrow;
+        }
 
         if (!file_exists($path) || !is_file($path)) {
             throw new ExifException("Resource $resUrl not found", 404);
@@ -100,7 +107,7 @@ class Resource {
 
         $data = $data[0];
         unset($data->FileName, $data->SourceFile, $data->FileModifyDate, $data->FileAccessDate, $data->FileInodeChangeDate, $data->FilePermissions);
-        $data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $data = (string) json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         return new ResponseCacheItem($data, 200, ['Content-Type' => 'application/json'], false);
     }
 }
