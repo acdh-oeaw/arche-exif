@@ -58,7 +58,8 @@ class Resource {
      * 
      * @param object{'schema': object, 'exiftoolCmd': string} $config
      */
-    public function __construct(RepoResourceInterface $res, private object $config,
+    public function __construct(RepoResourceInterface $res,
+                                private object $config,
                                 private CallbackContextInterface $context) {
         $this->meta   = $res->getGraph();
         $this->schema = new Schema($config->schema);
@@ -72,19 +73,7 @@ class Resource {
             throw new ExifException("Requested resource doesn't have a binary payload\n", 400);
         }
         $fileCache = $this->context->getFileCache();
-        try {
-            $path      = $fileCache->getRefFilePath($resUrl, $mime, $this->context->getNoCache());
-        } catch(FileCacheException $e) {
-            $toThrow = match($e->getCode()) {
-                FileCacheException::TOO_LARGE=>new ExifException("Request entity too large\n", 413),
-                FileCacheException::NO_BINARY=>new ExifException($e->getMessage(), 400),
-                FileCacheException::NO_FILE=>new ExifException($e->getMessage(), 500),
-                FileCacheException::UNAUTHORIZED=>new ExifException("Unauthorized\n", 401),
-                FileCacheException::FORBIDDEN=>new ExifException("Forbidden\n", 403),
-                default=>$e,
-            };
-            throw $toThrow;
-        }
+        $path      = $fileCache->getRefFilePath($resUrl, $mime, $this->context->getNoCache());
 
         if (!file_exists($path) || !is_file($path)) {
             throw new ExifException("Resource $resUrl not found", 404);

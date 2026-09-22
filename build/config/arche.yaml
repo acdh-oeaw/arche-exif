@@ -34,8 +34,8 @@ auth:
   ttl: 300
   # see https://www.php.net/manual/en/function.password-hash.php
   passwordCost: 10
-  passBasicAuth: false
-  defaultAuth: ['', '']
+  passBasicAuth: true
+  defaultAuth: ~
 fileCache:
   dir: /var/www/html/cache
   mimeProperty: https://vocabs.acdh.oeaw.ac.at/schema#hasFormat

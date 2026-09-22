@@ -132,9 +132,9 @@ class ResourceTest extends \PHPUnit\Framework\TestCase {
             $cache->getResponse([], 'https://hdl.handle.net/21.11115/0000-000D-D715-9');
             /** @phpstan-ignore method.impossibleType */
             $this->assertTrue(false);
-        } catch (ExifException $e) {
+        } catch (FileCacheException $e) {
             $this->assertEquals(413, $e->getCode());
-            $this->assertEquals("Request entity too large\n", $e->getMessage());
+            $this->assertEquals("Requested file too large", $e->getMessage());
         }
     }
 
@@ -144,9 +144,9 @@ class ResourceTest extends \PHPUnit\Framework\TestCase {
             $cache->getResponse([], 'https://hdl.handle.net/21.11115/0000-0011-0DB9-F');
             /** @phpstan-ignore method.impossibleType */
             $this->assertTrue(false);
-        } catch (ExifException $e) {
+        } catch (FileCacheException $e) {
             $this->assertEquals(403, $e->getCode());
-            $this->assertEquals("Forbidden\n", $e->getMessage());
+            $this->assertEquals("Forbidden", $e->getMessage());
         }
     }
 
