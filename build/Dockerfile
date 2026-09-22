@@ -8,6 +8,9 @@ RUN chmod +x /usr/local/bin/install-php-extensions &&\
 COPY * /var/www/html/
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY 000-default.conf /etc/apache2/sites-enabled/000-default.conf
-RUN cd /var/www/html && composer update -o --no-dev && chown -R www-data:www-data /var/www/html
+RUN cd /var/www/html &&\
+    composer update -o --no-dev &&\
+    chown -R www-data:www-data /var/www/html &&\
+    ln -s /usr/local/bin/php /usr/bin/php
 EXPOSE 80
 ENTRYPOINT ["entrypoint.sh"]
