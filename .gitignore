@@ -5,3 +5,4 @@
 /build/docroot
 /build/logs
 /cache
+/config.yaml
